@@ -60,15 +60,8 @@ def split(file_name1, file_name2):
 
         for i in range(train_num, len(mix_list)):
             csv_writer.writerow(mix_list[i])
-    
-
-            
-        
-
-
         
 
 if __name__ == "__main__":
-    #api_key = setup("api_key.txt")
 
     split("trending_data.csv", "nontrending_data.csv")

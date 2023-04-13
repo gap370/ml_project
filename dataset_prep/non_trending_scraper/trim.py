@@ -49,7 +49,6 @@ def crop_rows(file_name1, file_name2):
 
 
 if __name__ == "__main__":
-    # api_key = setup("api_key.txt")
 
     crop_rows("US_youtube_trending_data_trim.csv", "US_youtube_nontrending_data.csv")
 

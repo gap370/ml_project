@@ -42,9 +42,7 @@ def add_sub(file_name, api_key):
             csv_writer.writerow(row)
             output_count += 1
             row_count += 1
-
-            
-                        
+              
         print(row_count)
         print(output_count)
         

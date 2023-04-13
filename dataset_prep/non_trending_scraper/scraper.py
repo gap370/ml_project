@@ -49,15 +49,11 @@ def get_dislikes_rating(video_id):
     return request.json()["dislikes"], request.json()["rating"]
 
 
-def setup(api_path, code_path):
+def setup(api_path):
     with open(api_path, 'r') as file:
         api_key = file.readline()
 
-    with open(code_path) as file:
-        country_codes = [x.rstrip() for x in file]
-
-    return api_key, country_codes
-
+    return api_key
 
 def prepare_feature(feature):
     # Removes any character from the unsafe characters list and surrounds the whole item in quotes
@@ -67,10 +63,10 @@ def prepare_feature(feature):
 
 
 def api_request(cate, next_page_token):
+
     print('new request')
     if (next_page_token != '&'):
         request_url = f"https://www.googleapis.com/youtube/v3/search?pageToken={next_page_token}&part=id,snippet&publishedAfter=2022-12-15T00:00:00Z&publishedBefore=2023-03-15T00:00:00Z&videoCategoryId={cate}&relevanceLanguage=en&type=video&maxResults=50&key={api_key}"
-    #request_url = f"https://www.googleapis.com/youtube/v3/search?part=id,snippet&relatedToVideoId={row[0]}&type=video&maxResults=50&key={api_key}"
     else:
         request_url = f"https://www.googleapis.com/youtube/v3/search?part=id,snippet&publishedAfter=2022-12-15T00:00:00Z&publishedBefore=2023-03-15T00:00:00Z&videoCategoryId={cate}&relevanceLanguage=en&type=video&maxResults=50&key={api_key}"
     request = requests.get(request_url)
@@ -83,78 +79,6 @@ def api_request(cate, next_page_token):
 
     return related_list, next_token
 
-
-    # for i in range(len(related_list)):
-    #     related_vid = related_list[i]
-    #     vid_id = related_vid["id"]["videoId"]
-    #     title = related_vid["snippet"]["title"]
-
-    #     if (not isEnglish(title)):
-    #         continue
-
-    #     pub_date = related_vid["snippet"]["publishedAt"][:-10]
-    #     if vid_id in id_set:
-    #         continue
-
-    #     #print(row[2], pub_date, date_diff(row[2], pub_date))
-    #     if date_diff(row[2], pub_date) < -60:
-    #         continue
-
-    #     request_url = f"https://www.googleapis.com/youtube/v3/videos?id={vid_id}&part=id,statistics,snippet&key={api_key}"
-    #     request = requests.get(request_url)
-    #     hit = 1
-    #     break;
-
-        
-
-    # if hit == 0:
-    #     print('no same range')
-    #     # print(row[0])
-    #     #vid_id = related_list[0]["id"]["videoId"]
-    #     #request_url = f"https://www.googleapis.com/youtube/v3/videos?id={vid_id}&part=id,statistics,snippet&key={api_key}"
-    #     #request = requests.get(request_url)
-    #     for i in range(len(related_list)):
-    #         related_vid = related_list[i]
-    #         vid_id = related_vid["id"]["videoId"]
-    #         title = related_vid["snippet"]["title"]
-
-    #         if (not isEnglish(title)):
-    #             continue
-
-    #         pub_date = related_vid["snippet"]["publishedAt"][:-10]
-    #         if vid_id in id_set:
-    #             continue
-
-    #         #print(row[2], pub_date, date_diff(row[2], pub_date))
-
-    #         request_url = f"https://www.googleapis.com/youtube/v3/videos?id={vid_id}&part=id,statistics,snippet&key={api_key}"
-    #         request = requests.get(request_url)
-    #         hit = 1
-    #         break;
-    
-    # if hit == 0:
-    #     print('wrong')
-    #     print(row[0])
-
-    #     return 0
-        
-    #print(len(request.json()["items"]))
-
-
-    # Builds the URL and requests the JSON from it
-    #request_url = f"https://www.googleapis.com/youtube/v3/videos?part=id,statistics,snippet{page_token}chart=mostPopular&regionCode={country_code}&maxResults=50&key={api_key}"
-    #request_url = f"https://www.googleapis.com/youtube/v3/search?part=id,snippet{page_token}&relatedToVideoId=5rOiW_xY-kc&type=video&maxResults=50&key={api_key}"
-    #request_url = f"https://www.googleapis.com/youtube/v3/videos?id=xwtdhWltSIg&part=id,statistics,snippet&key={api_key}"
-    
-    #request = requests.get(request_url)
-
-    #print(request.json()['items'])
-    #print(len(request.json()['items']))
-    #if request.status_code == 429:
-    #    print("Temp-Banned due to excess requests, please wait and continue later")
-    #    sys.exit()
-
-    #return request.json()
 
 
 def get_tags(tags_list):
@@ -243,23 +167,23 @@ def get_pages(file_name, next_page_token="&"):
                 id_set.add(row[0])
             row_count += 1
 
-    with open("US_youtube_nontrending_data.csv", "r", encoding='utf-8') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        row_count = 0
+    # with open("US_youtube_nontrending_data.csv", "r", encoding='utf-8') as csv_file:
+    #     csv_reader = csv.reader(csv_file, delimiter=',')
+    #     row_count = 0
 
-        for row in csv_reader:
-            if (row_count != 0):
-                id_set.add(row[0])
+    #     for row in csv_reader:
+    #         if (row_count != 0):
+    #             id_set.add(row[0])
 
-            row_count += 1
+    #         row_count += 1
 
     with open("US_youtube_nontrending_data.csv", "a+", encoding='utf-8') as file:
         
-        #file.write(f"{country_data[0]}\n")
+        file.write(f"{country_data[0]}\n")
         row_count = 1
 
-        #cate = [2, 1, 10, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44]
-        cate = [29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44]
+        cate = [2, 1, 10, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44]
+        #cate = [29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44]
         j = 0
 
         while (row_count < 1000000):
@@ -286,63 +210,28 @@ def get_pages(file_name, next_page_token="&"):
 
                     country_data += get_videos(request.json()['items'])
                     file.write(f"{country_data[-1]}\n")
-                    #file.write(f"{get_videos(video_data_page['items'])}\n")    
+                     
                 
                     row_count += 1
                     print(row_count)
+
             next_page_token = '&'
             j += 1
             
 
-
-    # # Because the API uses page tokens (which are literally just the same function of numbers everywhere) it is much
-    # # more inconvenient to iterate over pages, but that is what is done here.
-    # while next_page_token is not None:
-    #     # A page of data i.e. a list of videos and all needed data
-    #     video_data_page = api_request(next_page_token, file_name)
-
-    #     # Get the next page token and build a string which can be injected into the request with it, unless it's None,
-    #     # then let the whole thing be None so that the loop ends after this cycle
-    #     next_page_token = video_data_page.get("nextPageToken", None)
-    #     next_page_token = f"&pageToken={next_page_token}&" if next_page_token is not None else next_page_token
-
-    #     # Get all of the items as a list and let get_videos return the needed features
-    #     items = video_data_page.get('items', [])
-    #     country_data += get_videos(items)
-
-    #return country_data
-
-
-# def write_to_file(country_code, country_data):
-
-#     print(f"Writing {country_code} data to file...")
-
-#     if not os.path.exists(output_dir):
-#         os.makedirs(output_dir)
-
-#     with open(f"{output_dir}/{time.strftime('%y.%d.%m')}_{country_code}_videos.csv", "w+", encoding='utf-8') as file:
-#         for row in country_data:
-#             file.write(f"{row}\n")
-
-
 def get_data(file_name):
-    for country_code in country_codes:
-        get_pages(file_name)
-        # country_data = [",".join(header)] + get_pages(file_name)
-        #write_to_file(country_code, country_data)
+    
+    get_pages(file_name)
 
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--key_path', help='Path to the file containing the api key, by default will use api_key.txt in the same directory', default='api_key.txt')
-    parser.add_argument('--country_code_path', help='Path to the file containing the list of country codes to scrape, by default will use country_codes.txt in the same directory', default='country_codes.txt')
-    parser.add_argument('--output_dir', help='Path to save the outputted files in', default='output/')
 
     args = parser.parse_args()
 
-    output_dir = args.output_dir
-    api_key, country_codes = setup(args.key_path, args.country_code_path)
+    api_key = setup(args.key_path)
 
     get_data("US_youtube_trending_data_trim.csv")
 

@@ -18,8 +18,8 @@ def get_dislikes_rating(video_id):
     request_url = f"https://returnyoutubedislikeapi.com/votes?videoId={video_id}"
 
     proxies = { 
-              "http"  : "http://richweiwei:Richweiwei500k@pr.oxylabs.io:7777", 
-              "https" : "http://richweiwei:Richweiwei500k@pr.oxylabs.io:7777"
+              "http"  : "http://XXXX:XXXX@pr.oxylabs.io:7777", 
+              "https" : "http://XXXX:XXXX@pr.oxylabs.io:7777"
             }
 
     request = requests.get(request_url, proxies=proxies)
